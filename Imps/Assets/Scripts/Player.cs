@@ -43,7 +43,8 @@ public class Player : MonoBehaviour
         if (_isShootingValue == 1 && Cooldown >= 3)
         {
             _shotFired = true;
-            GameObject go = Instantiate(Bullet, BulletSpawnPoint.position, transform.rotation);
+            Vector3 direction = BulletSpawnPoint.position - Camera.main.transform.forward;
+            GameObject go = Instantiate(Bullet, direction, transform.rotation);
         }
 
         if(_shotFired) 
