@@ -7,12 +7,10 @@ using UnityEngine.UIElements;
 public class ImpMovement : MonoBehaviour
 {
     // Start is called before the first frame update
-    public Transform Player;
-
     private GameObject[] _escapes;
+    public bool _isGrounded; 
     private float _distance;
     private int _closestEscape;
-    private CharacterController _characterController;
     private NavMeshAgent _agent;
     void Start()
     {
@@ -24,9 +22,15 @@ public class ImpMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //if (isGrounded())
+        //{
+        //    FindClosestEscape();
+        //}
+        //else
+        //{
+        //    transform.position -= (Vector3.up * 2f) * Time.deltaTime;
+        //}
         FindClosestEscape();
-
-        Ground();
     }
 
     private void FindClosestEscape()
@@ -40,17 +44,22 @@ public class ImpMovement : MonoBehaviour
             }
         }
 
-        _agent.SetDestination(_escapes[_closestEscape].transform.position);
+        // transform.position = Vector3.Lerp(transform.position, _escapes[_closestEscape].transform.position, _distance * Time.deltaTime);  
+        _agent.SetDestination(_escapes[_closestEscape].transform.position); 
     }
 
-    private void Ground()
+    private bool isGrounded()
     {
-        if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y - (transform.localScale.y / 2), transform.position.z), -Vector3.up, 0.04f))
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - (transform.localScale.y / 2), transform.position.z), -Vector3.up, Color.red);
+        if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y - (transform.localScale.y / 2), transform.position.z), -Vector3.up, 0.4f))
         {
+            _isGrounded = true;
+            return true;
         }
         else
         {
-            transform.position -= (Vector3.up * 2f) * Time.deltaTime;
+            _isGrounded = false;
+            return false;
         }
     }
 }

@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     private Vector3 _moveVector;
     private float _verticalVel, _gravity = 12;
     private CharacterController _characterController;
-    private Vector2 _input, _leftInput;
+    private Vector2 _input;
     void Start()
     {
         _characterController = GetComponent<CharacterController>();
@@ -21,11 +21,6 @@ public class Player : MonoBehaviour
     private void OnMove(InputValue value)
     {
         _input = value.Get<Vector2>();  
-    }
-
-    private void OnRotate(InputValue value) 
-    { 
-        _leftInput = value.Get<Vector2>();
     }
 
     private void OnJump(InputValue value)
@@ -37,7 +32,7 @@ public class Player : MonoBehaviour
     {
         Movement();
 
-        transform.Rotate(0, _leftInput.x * RotationSpeed * Time.deltaTime, 0);
+        transform.Rotate(0, _input.x * RotationSpeed * Time.deltaTime, 0);
     }
 
     private void Movement()
@@ -49,7 +44,7 @@ public class Player : MonoBehaviour
         {
             _verticalVel = -0.5f;
         }
-        if (_characterController.isGrounded && _isJumpingValue == 1)
+        if (_characterController.isGrounded && _isJumpingValue == 1) //Jump
         {
             _verticalVel = JumpHeight;
         }
