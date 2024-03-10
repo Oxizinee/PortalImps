@@ -828,6 +828,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2402197560049830301, guid: 7d73b4568bde66748ba75ef3dadcae1b, type: 3}
+      propertyPath: MovementSpeed
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 7528469710516503644, guid: 7d73b4568bde66748ba75ef3dadcae1b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 55.1
@@ -928,6 +932,10 @@ PrefabInstance:
     - target: {fileID: 7385259314901948983, guid: f75912097300e7c48aa01592bbea4473, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8056301449952216409, guid: f75912097300e7c48aa01592bbea4473, type: 3}
+      propertyPath: m_Speed
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8438690703067315343, guid: f75912097300e7c48aa01592bbea4473, type: 3}
       propertyPath: Player

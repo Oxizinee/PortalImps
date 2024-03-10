@@ -7,9 +7,11 @@ public class Player : MonoBehaviour
 {
     public float MovementSpeed = 7;
     public float RotationSpeed = 10;
+    public float JumpHeight = 8;
 
+    [SerializeField]private float _isJumpingValue;
     private Vector3 _moveVector;
-    [SerializeField]private float _verticalVel, _gravity = 12;
+    private float _verticalVel, _gravity = 12;
     private CharacterController _characterController;
     private Vector2 _input, _leftInput;
     void Start()
@@ -24,6 +26,11 @@ public class Player : MonoBehaviour
     private void OnRotate(InputValue value) 
     { 
         _leftInput = value.Get<Vector2>();
+    }
+
+    private void OnJump(InputValue value)
+    {
+        _isJumpingValue = value.Get<float>();
     }
     // Update is called once per frame
     void Update()
@@ -41,6 +48,10 @@ public class Player : MonoBehaviour
         if (_characterController.isGrounded)
         {
             _verticalVel = -0.5f;
+        }
+        if (_characterController.isGrounded && _isJumpingValue == 1)
+        {
+            _verticalVel = JumpHeight;
         }
         else
         {
