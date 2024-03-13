@@ -94,6 +94,7 @@ public class Player : MonoBehaviour
             dir = -dir.normalized;
             // And finally we add force in the direction of dir and multiply it by force. 
             // This will push back the player
+            if(!hit.transform.gameObject.GetComponent<ImpMovement>()._isStunned)
             hit.transform.position -= dir * pushBackForce * Time.deltaTime;
         }
     }
