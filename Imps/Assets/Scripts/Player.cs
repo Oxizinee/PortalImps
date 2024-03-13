@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,6 +14,9 @@ public class Player : MonoBehaviour
     public float Cooldown = 3;
     public GameObject Bullet;
     public Transform BulletSpawnPoint;
+
+    public LayerMask ImpMask;
+    public int pushBackForce = 4;
 
     public GameObject StunUI;
     public bool CanStun; 
@@ -76,8 +80,23 @@ public class Player : MonoBehaviour
 
         StunningCooldown();
 
-    }
+        PushImpsOppositeDirection();
 
+    }
+    private void PushImpsOppositeDirection()
+    {
+        RaycastHit hit;
+        if (Physics.SphereCast(new Vector3(transform.position.x, transform.position.y, transform.position.z), 4,
+            Vector3.forward, out hit, 2, ImpMask.value, QueryTriggerInteraction.UseGlobal))
+        {
+            Vector3 dir = hit.point - transform.position;
+            // We then get the opposite (-Vector3) and normalize it
+            dir = -dir.normalized;
+            // And finally we add force in the direction of dir and multiply it by force. 
+            // This will push back the player
+            hit.transform.position -= dir * pushBackForce * Time.deltaTime;
+        }
+    }
     private void StunningCooldown()
     {
         if (_isStunningValue == 1 && StunCooldown >= 20)
