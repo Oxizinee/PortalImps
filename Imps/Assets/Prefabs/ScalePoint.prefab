@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4716717110544666283}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ScalePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 7777332881463419789}
   - component: {fileID: 3834772669433539721}
   - component: {fileID: 9220634023715040436}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

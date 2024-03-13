@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    public float StunDuration = 30;
     public float MovementSpeed = 7;
     public float RotationSpeed = 10;
     public float JumpHeight = 8;
@@ -12,15 +14,25 @@ public class Player : MonoBehaviour
     public GameObject Bullet;
     public Transform BulletSpawnPoint;
 
-    private bool _shotFired; 
+    public GameObject StunUI;
+    public bool CanStun; 
+    private bool _isOnStunCooldown;
+    public float StunCooldown = 20;
+
+    private bool _shotFired;
+    private float _isStunningValue;
     [SerializeField]private float _isJumpingValue, _isShootingValue;
     private Vector3 _moveVector;
     private float _verticalVel, _gravity = 12;
     private CharacterController _characterController;
-    private Vector2 _input;
+    private Vector2 _input, _rotateInput;
     void Start()
     {
         _characterController = GetComponent<CharacterController>();
+    }
+    private void OnRotate(InputValue value)
+    {
+        _rotateInput = value.Get<Vector2>();
     }
     private void OnMove(InputValue value)
     {
@@ -33,6 +45,10 @@ public class Player : MonoBehaviour
     private void OnJump(InputValue value)
     {
         _isJumpingValue = value.Get<float>();
+    }
+    private void OnStun(InputValue value) 
+    { 
+        _isStunningValue = value.Get<float>();
     }
     // Update is called once per frame
     void Update()
@@ -58,11 +74,39 @@ public class Player : MonoBehaviour
             }
         }
 
+        StunningCooldown();
+
+    }
+
+    private void StunningCooldown()
+    {
+        if (_isStunningValue == 1 && StunCooldown >= 20)
+        {
+            CanStun = true;
+            _isOnStunCooldown = true;
+        }
+        else if (_isStunningValue < 1)
+        {
+            CanStun = false;
+        }
+
+        if(_isOnStunCooldown) 
+        {
+            StunCooldown -= Time.deltaTime;
+            if (StunCooldown < 0)
+            {
+                StunCooldown = 20;
+                _isOnStunCooldown= false;
+                return;
+            }
+        }
+
+        StunUI.SetActive(!_isOnStunCooldown);
     }
 
     private void Rotate()
     {
-        transform.Rotate(0, _input.x * RotationSpeed * Time.deltaTime, 0);
+        transform.Rotate(0, _rotateInput.x * RotationSpeed * Time.deltaTime, 0);
     }
 
     private void Movement()

@@ -8,7 +8,7 @@ public class ImpMovement : MonoBehaviour
 {
     // Start is called before the first frame update
     private GameObject[] _escapes;
-    public bool _isGrounded; 
+    public bool _isGrounded, _isStunned; 
     private float _distance;
     private int _closestEscape;
     private NavMeshAgent _agent;
@@ -22,19 +22,21 @@ public class ImpMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (isGrounded())
-        //{
-        //    FindClosestEscape();
-        //}
-        //else
-        //{
-        //    transform.position -= (Vector3.up * 2f) * Time.deltaTime;
-        //}
-        FindClosestEscape();
+        if(_isStunned) 
+        {
+            _agent.isStopped = true;
+        }
+        else
+        {
+            _agent.isStopped = false;
+            FindClosestEscape();
+        }
     }
 
     private void FindClosestEscape()
     {
+        if (_isStunned) return;
+
         for (int i = 0; i < _escapes.Length; i++)
         {
             if (Vector3.Distance(transform.position, _escapes[i].transform.position) < _distance)
@@ -44,7 +46,6 @@ public class ImpMovement : MonoBehaviour
             }
         }
 
-        // transform.position = Vector3.Lerp(transform.position, _escapes[_closestEscape].transform.position, _distance * Time.deltaTime);  
         _agent.SetDestination(_escapes[_closestEscape].transform.position); 
     }
 
@@ -61,5 +62,22 @@ public class ImpMovement : MonoBehaviour
             _isGrounded = false;
             return false;
         }
+    }
+
+    public void Stun(float stunDuration)
+    {
+        _isStunned = true;
+        StartCoroutine(StunDuration(stunDuration)); 
+    }
+
+    public IEnumerator StunDuration(float stunDuration)
+    {
+        if (_isStunned)
+        {
+            transform.position += Vector3.up * Time.deltaTime;
+            yield return new WaitForSeconds(stunDuration);
+           _isStunned = false;
+        }
+        yield return null;
     }
 }
