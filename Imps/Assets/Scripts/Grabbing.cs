@@ -10,7 +10,7 @@ public class Grabbing : MonoBehaviour
     public Transform ShootingPlace;
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Imp" && Player.GetComponent<Player>().IsHoldingButton)
+        if (other.gameObject.tag == "Imp" && Player.GetComponent<Player>().IsHoldingButton && Player.GetComponent<Player>().Imp == null)
         {
             other.GetComponent<ImpMovement>().IsBeingHeld = true;  
             Player.GetComponent<Player>().IsHoldingImp = true;
