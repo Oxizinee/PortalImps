@@ -17,18 +17,22 @@ public class Player : MonoBehaviour
     public GameObject Bullet;
     public Transform BulletSpawnPoint;
 
+    [Header("Pushing Back")]
     public LayerMask ImpMask;
     public int pushBackForce = 4;
 
+    [Header("Stunning")]
     public GameObject StunUI;
     public bool CanStun; 
     private bool _isOnStunCooldown;
     public float StunCooldown = 20;
 
+    [Header("Throwing Imps")]
     public bool IsHoldingButton, IsHoldingImp;
     public GameObject Imp = null;
     public float ThrowStrength = 20;
-    [SerializeField]private bool _canShoot;
+    [SerializeField]private bool _canShoot = true;
+    public GameObject ThrowUI;
 
     private bool _shotFired;
     private float _isStunningValue;
@@ -40,6 +44,8 @@ public class Player : MonoBehaviour
     void Start()
     {
         _characterController = GetComponent<CharacterController>();
+        ThrowUI.SetActive(false);
+        _canShoot = true;
     }
     private void OnRotate(InputValue value)
     {
@@ -71,17 +77,15 @@ public class Player : MonoBehaviour
         Movement();
         Rotate();
 
-        //else
-        //{
-        //    StartCoroutine(ChangeShootingBool());
-        //}
 
         if (IsHoldingImp)
         {
             _canShoot = false;
+            ThrowUI.SetActive(true);
             if (_isShootingValue == 1)
             {
                 StartCoroutine(ThrowPlayer());
+                ThrowUI.SetActive(false);   
                 _shotFired = true;
             }
         }
