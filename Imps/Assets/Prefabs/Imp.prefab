@@ -124,6 +124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isGrounded: 0
   _isStunned: 0
+  IsBeingHeld: 0
 --- !u!195 &6686931811409939092
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -140,7 +141,7 @@ NavMeshAgent:
   m_AngularSpeed: 120
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 1

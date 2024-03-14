@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
 
 public class Player : MonoBehaviour
 {
@@ -23,9 +25,14 @@ public class Player : MonoBehaviour
     private bool _isOnStunCooldown;
     public float StunCooldown = 20;
 
+    public bool IsHoldingButton, IsHoldingImp;
+    public GameObject Imp = null;
+    public float ThrowStrength = 20;
+    [SerializeField]private bool _canShoot;
+
     private bool _shotFired;
     private float _isStunningValue;
-    [SerializeField]private float _isJumpingValue, _isShootingValue;
+    private float _isJumpingValue, _isShootingValue;
     private Vector3 _moveVector;
     private float _verticalVel, _gravity = 12;
     private CharacterController _characterController;
@@ -54,18 +61,37 @@ public class Player : MonoBehaviour
     { 
         _isStunningValue = value.Get<float>();
     }
+    private void OnHold() 
+    {
+        IsHoldingButton = !IsHoldingButton;
+    }
     // Update is called once per frame
     void Update()
     {
         Movement();
         Rotate();
 
-        if (_isShootingValue == 1 && Cooldown >= 3)
+        //else
+        //{
+        //    StartCoroutine(ChangeShootingBool());
+        //}
+
+        if (IsHoldingImp)
+        {
+            _canShoot = false;
+            if (_isShootingValue == 1)
+            {
+                StartCoroutine(ThrowPlayer());
+                _shotFired = true;
+            }
+        }
+        else if (_isShootingValue == 1 && Cooldown >= 3 && _canShoot)
         {
             _shotFired = true;
             Vector3 direction = BulletSpawnPoint.position - Camera.main.transform.forward;
             GameObject go = Instantiate(Bullet, direction, transform.rotation);
         }
+
 
         if(_shotFired) 
         { 
@@ -73,6 +99,7 @@ public class Player : MonoBehaviour
             if(Cooldown < 0) 
             {
                 Cooldown = 3;
+                _canShoot = true;
                 _shotFired= false;
                 return;
             }
@@ -82,6 +109,26 @@ public class Player : MonoBehaviour
 
         PushImpsOppositeDirection();
 
+    }
+    private IEnumerator ThrowPlayer()
+    {
+        float t = 0;
+        Vector3 startPos = Imp.transform.position;
+        Vector3 targetPos = Imp.transform.position + (transform.forward * ThrowStrength);
+
+        while (t < 1)
+        {
+            t += Time.deltaTime;
+
+            Imp.GetComponent<Rigidbody>().transform.position = Vector3.Lerp(startPos, targetPos, t);
+
+        }
+
+        Imp.GetComponent<ImpMovement>().IsBeingHeld = false;
+        IsHoldingImp = false;
+        Imp.transform.parent = null;
+        Imp = null;
+        yield return null;
     }
     private void PushImpsOppositeDirection()
     {

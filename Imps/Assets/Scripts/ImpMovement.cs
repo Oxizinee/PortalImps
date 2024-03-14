@@ -8,7 +8,8 @@ public class ImpMovement : MonoBehaviour
 {
     // Start is called before the first frame update
     private GameObject[] _escapes;
-    public bool _isGrounded, _isStunned; 
+    public bool _isGrounded, _isStunned, IsBeingHeld; 
+
     private float _distance;
     private int _closestEscape;
     private NavMeshAgent _agent;
@@ -22,20 +23,33 @@ public class ImpMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(_isStunned) 
+        if (_isGrounded && _agent != null)
         {
-            _agent.isStopped = true;
+            if (_isStunned && !IsBeingHeld)
+            {
+                _agent.isStopped = true;
+            }
+            else if (!_isStunned && !IsBeingHeld)
+            {
+                _agent.isStopped = false;
+                FindClosestEscape();
+            }
         }
-        else
+
+        if (isGrounded() && GetComponent<NavMeshAgent>() == null)
         {
-            _agent.isStopped = false;
-            FindClosestEscape();
+            _agent = gameObject.AddComponent<NavMeshAgent>();
+        }
+        else if (!isGrounded())
+        {
+            transform.position -= Vector3.up * 2 * Time.deltaTime;
         }
     }
 
     private void FindClosestEscape()
     {
         if (_isStunned) return;
+        if (IsBeingHeld) return;
 
         for (int i = 0; i < _escapes.Length; i++)
         {
@@ -49,23 +63,11 @@ public class ImpMovement : MonoBehaviour
         _agent.SetDestination(_escapes[_closestEscape].transform.position); 
     }
 
-    private bool isGrounded()
-    {
-        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - (transform.localScale.y / 2), transform.position.z), -Vector3.up, Color.red);
-        if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y - (transform.localScale.y / 2), transform.position.z), -Vector3.up, 0.4f))
-        {
-            _isGrounded = true;
-            return true;
-        }
-        else
-        {
-            _isGrounded = false;
-            return false;
-        }
-    }
 
     public void Stun(float stunDuration)
     {
+        if(IsBeingHeld) return; 
+
         _isStunned = true;
         StartCoroutine(StunDuration(stunDuration)); 
     }
@@ -79,5 +81,20 @@ public class ImpMovement : MonoBehaviour
            _isStunned = false;
         }
         yield return null;
+    }
+
+    public bool isGrounded()
+    {
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - (transform.localScale.y / 2), transform.position.z), -Vector3.up, Color.red);
+        if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y - (transform.localScale.y / 2), transform.position.z), -Vector3.up, 0.8f))
+        {
+            _isGrounded = true;
+            return true;
+        }
+        else
+        {
+            _isGrounded = false;
+            return false;
+        }
     }
 }
