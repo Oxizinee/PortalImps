@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviour
     public float MovementSpeed = 100;
     public float ScaleSpeed = 80;
     public int LifeTime = 10;
-
+    public int MaxScale = 100;
     private GameObject _pathInstance;
     private float _timer;
     private Vector3 _startPos;
@@ -44,7 +44,7 @@ public class Bullet : MonoBehaviour
 
         if(_pathInstance != null) 
         {
-            _pathInstance.transform.localScale = new Vector3(1, 1, _pathInstance.transform.localScale.z + ScaleSpeed * Time.deltaTime);
+            _pathInstance.transform.localScale = new Vector3(1, 1, Mathf.Clamp(_pathInstance.transform.localScale.z + ScaleSpeed * Time.deltaTime, -2, MaxScale));
         }
     }
 }

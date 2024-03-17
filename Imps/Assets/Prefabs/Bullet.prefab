@@ -123,3 +123,4 @@ MonoBehaviour:
   MovementSpeed: 100
   ScaleSpeed: 80
   LifeTime: 10
+  MaxScale: 30
