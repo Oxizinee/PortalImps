@@ -182,7 +182,7 @@ public class Player : MonoBehaviour
 
     private void Movement()
     {
-        _moveVector = transform.forward * MovementSpeed * _input.y;
+        _moveVector = (transform.forward * _input.y + transform.right * _input.x) * MovementSpeed;    
         _moveVector.y = _verticalVel;
 
         if (_characterController.isGrounded)
