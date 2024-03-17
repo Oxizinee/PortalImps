@@ -15,7 +15,6 @@ public class Player : MonoBehaviour
     public float JumpHeight = 8;
     public float Cooldown = 3;
     public GameObject BulletPrefab;
-    private GameObject BulletInstance;
     public Transform BulletSpawnPoint;
 
     [Header("Pushing Back")]
@@ -83,6 +82,8 @@ public class Player : MonoBehaviour
         {
             _canShoot = false;
             ThrowUI.SetActive(true);
+            Imp.GetComponent<ImpMovement>().Renderer.sharedMaterial = Imp.GetComponent<ImpMovement>()._ghostMat;
+            Imp.transform.position = transform.position + (transform.forward * ThrowStrength);
             if (_isShootingValue == 1)
             {
                 StartCoroutine(ThrowPlayer());
@@ -121,7 +122,7 @@ public class Player : MonoBehaviour
     {
         float t = 0;
         Vector3 startPos = Imp.transform.position;
-        Vector3 targetPos = Imp.transform.position + (transform.forward * ThrowStrength);
+        Vector3 targetPos = BulletSpawnPoint.transform.position + (transform.forward * ThrowStrength);
 
         while (t < 1)
         {
@@ -134,6 +135,7 @@ public class Player : MonoBehaviour
         Imp.GetComponent<ImpMovement>().IsBeingHeld = false;
         IsHoldingImp = false;
         Imp.transform.parent = null;
+        Imp.GetComponent<ImpMovement>().Renderer.sharedMaterial = Imp.GetComponent<ImpMovement>()._deafultMat;
         Imp = null;
         yield return null;
     }

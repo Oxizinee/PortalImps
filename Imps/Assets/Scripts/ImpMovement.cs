@@ -8,6 +8,8 @@ public class ImpMovement : MonoBehaviour
 {
     // Start is called before the first frame update
     private GameObject[] _escapes;
+    public Material _ghostMat, _deafultMat;
+    public MeshRenderer Renderer;
     public bool _isGrounded, _isStunned, IsBeingHeld; 
 
     private float _distance;
@@ -15,6 +17,8 @@ public class ImpMovement : MonoBehaviour
     private NavMeshAgent _agent;
     void Start()
     {
+        Renderer = GetComponent<MeshRenderer>();
+        _deafultMat = Renderer.sharedMaterial;
         _agent = GetComponent<NavMeshAgent>();
         _escapes = GameObject.FindGameObjectsWithTag("Escape");
         _distance = Vector3.Distance(transform.position, _escapes[0].transform.position);

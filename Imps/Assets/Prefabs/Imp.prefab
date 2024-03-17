@@ -122,6 +122,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e873e67d9fafd0447ad9a87486c1dcd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ghostMat: {fileID: 2100000, guid: 994da3664d2cc6740ab8a7a6401fded6, type: 2}
+  _deafultMat: {fileID: 0}
+  Renderer: {fileID: 0}
   _isGrounded: 0
   _isStunned: 0
   IsBeingHeld: 0

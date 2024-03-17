@@ -16,7 +16,7 @@ public class Grabbing : MonoBehaviour
             Player.GetComponent<Player>().IsHoldingImp = true;
             Player.GetComponent<Player>().Imp = other.gameObject;
             Destroy(other.gameObject.GetComponent<NavMeshAgent>()); 
-            other.gameObject.transform.position = ShootingPlace.transform.position;
+           // other.gameObject.transform.position = ShootingPlace.transform.position;
             other.transform.parent = Player.transform;
         }
     }
