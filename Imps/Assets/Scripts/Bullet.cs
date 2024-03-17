@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviour
     public float MovementSpeed = 100;
     public float ScaleSpeed = 80;
     public int LifeTime = 10;
-    public int MaxScale = 100;
+    public float MaxScale = 100;
     private GameObject _pathInstance;
     private float _timer;
     private Vector3 _startPos;

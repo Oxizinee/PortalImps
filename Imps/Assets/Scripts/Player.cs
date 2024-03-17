@@ -14,7 +14,8 @@ public class Player : MonoBehaviour
     public float RotationSpeed = 10;
     public float JumpHeight = 8;
     public float Cooldown = 3;
-    public GameObject Bullet;
+    public GameObject BulletPrefab;
+    private GameObject BulletInstance;
     public Transform BulletSpawnPoint;
 
     [Header("Pushing Back")]
@@ -36,7 +37,7 @@ public class Player : MonoBehaviour
 
     private bool _shotFired;
     private float _isStunningValue;
-    private float _isJumpingValue, _isShootingValue;
+    [SerializeField]private float _isJumpingValue, _isShootingValue;
     private Vector3 _moveVector;
     private float _verticalVel, _gravity = 12;
     private CharacterController _characterController;
@@ -91,14 +92,16 @@ public class Player : MonoBehaviour
         }
         else if (_isShootingValue == 1 && Cooldown >= 3 && _canShoot)
         {
-            _shotFired = true;
-            Vector3 direction = BulletSpawnPoint.position - Camera.main.transform.forward;
-            GameObject go = Instantiate(Bullet, direction, transform.rotation);
+
+           _shotFired = true;
+           Vector3 direction = BulletSpawnPoint.position - Camera.main.transform.forward;
+           GameObject go = Instantiate(BulletPrefab, direction, transform.rotation);
         }
 
 
+
         if(_shotFired) 
-        { 
+        {
             Cooldown -= Time.deltaTime;
             if(Cooldown < 0) 
             {
