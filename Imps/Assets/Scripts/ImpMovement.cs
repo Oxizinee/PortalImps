@@ -40,11 +40,12 @@ public class ImpMovement : MonoBehaviour
             }
         }
 
-        if (isGrounded() && GetComponent<NavMeshAgent>() == null)
+        if (!IsBeingHeld && GetComponent<NavMeshAgent>() == null)
         {
             _agent = gameObject.AddComponent<NavMeshAgent>();
         }
-        else if (!isGrounded())
+
+        if (!isGrounded())
         {
             transform.position -= Vector3.up * 2 * Time.deltaTime;
         }

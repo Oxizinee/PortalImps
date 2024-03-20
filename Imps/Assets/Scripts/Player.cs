@@ -120,18 +120,6 @@ public class Player : MonoBehaviour
     }
     private IEnumerator ThrowPlayer()
     {
-        float t = 0;
-        Vector3 startPos = Imp.transform.position;
-        Vector3 targetPos = BulletSpawnPoint.transform.position + (transform.forward * ThrowStrength);
-
-        while (t < 1)
-        {
-            t += Time.deltaTime;
-
-            Imp.GetComponent<Rigidbody>().transform.position = Vector3.Lerp(startPos, targetPos, t);
-
-        }
-
         Imp.GetComponent<ImpMovement>().IsBeingHeld = false;
         IsHoldingImp = false;
         Imp.transform.parent = null;
