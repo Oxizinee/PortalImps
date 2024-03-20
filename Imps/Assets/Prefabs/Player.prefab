@@ -504,7 +504,7 @@ MonoBehaviour:
   RotationSpeed: 90
   JumpHeight: 9
   Cooldown: 3
-  Bullet: {fileID: 0}
+  BulletPrefab: {fileID: 0}
   BulletSpawnPoint: {fileID: 6583561500145192744}
   ImpMask:
     serializedVersion: 2
@@ -513,6 +513,16 @@ MonoBehaviour:
   StunUI: {fileID: 0}
   CanStun: 0
   StunCooldown: 20
+  IsHoldingButton: 0
+  IsHoldingImp: 0
+  Imp: {fileID: 0}
+  ThrowStrength: 20
+  _canShoot: 1
+  ThrowUI: {fileID: 0}
+  DashDistance: 10
+  DashCooldown: 2
+  _isDashingValue: 0
+  _canDash: 1
   _isJumpingValue: 0
   _isShootingValue: 0
 --- !u!114 &211434089177609536

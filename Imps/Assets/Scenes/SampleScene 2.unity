@@ -3018,9 +3018,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 407644307}
     - target: {fileID: 2402197560049830301, guid: 7d73b4568bde66748ba75ef3dadcae1b, type: 3}
+      propertyPath: DashPoint
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2402197560049830301, guid: 7d73b4568bde66748ba75ef3dadcae1b, type: 3}
       propertyPath: BulletPrefab
       value: 
       objectReference: {fileID: 1845749789303645114, guid: 6064454c21ed21a4d97567c09dc8ee47, type: 3}
+    - target: {fileID: 2402197560049830301, guid: 7d73b4568bde66748ba75ef3dadcae1b, type: 3}
+      propertyPath: DashDistance
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 2402197560049830301, guid: 7d73b4568bde66748ba75ef3dadcae1b, type: 3}
       propertyPath: StunDuration
       value: 5

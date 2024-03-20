@@ -34,6 +34,12 @@ public class Player : MonoBehaviour
     [SerializeField]private bool _canShoot = true;
     public GameObject ThrowUI;
 
+    [Header("Dash")]
+    public float DashDistance = 10;
+    public float DashCooldown = 2;
+    [SerializeField]private float _isDashingValue;
+    [SerializeField] private bool _canDash = true;
+
     private bool _shotFired;
     private float _isStunningValue;
     [SerializeField]private float _isJumpingValue, _isShootingValue;
@@ -71,12 +77,16 @@ public class Player : MonoBehaviour
     {
         IsHoldingButton = !IsHoldingButton;
     }
+    private void OnDash(InputValue value)
+    {
+        _isDashingValue = value.Get<float>();
+    }
     // Update is called once per frame
     void Update()
     {
         Movement();
         Rotate();
-
+        Dash();
 
         if (IsHoldingImp)
         {
@@ -87,28 +97,28 @@ public class Player : MonoBehaviour
             if (_isShootingValue == 1)
             {
                 StartCoroutine(ThrowPlayer());
-                ThrowUI.SetActive(false);   
+                ThrowUI.SetActive(false);
                 _shotFired = true;
             }
         }
         else if (_isShootingValue == 1 && Cooldown >= 3 && _canShoot)
         {
 
-           _shotFired = true;
-           Vector3 direction = BulletSpawnPoint.position - Camera.main.transform.forward;
-           GameObject go = Instantiate(BulletPrefab, direction, transform.rotation);
+            _shotFired = true;
+            Vector3 direction = BulletSpawnPoint.position - Camera.main.transform.forward;
+            GameObject go = Instantiate(BulletPrefab, direction, transform.rotation);
         }
 
 
 
-        if(_shotFired) 
+        if (_shotFired)
         {
             Cooldown -= Time.deltaTime;
-            if(Cooldown < 0) 
+            if (Cooldown < 0)
             {
                 Cooldown = 3;
                 _canShoot = true;
-                _shotFired= false;
+                _shotFired = false;
                 return;
             }
         }
@@ -118,6 +128,27 @@ public class Player : MonoBehaviour
         PushImpsOppositeDirection();
 
     }
+
+    private void Dash()
+    {
+        if(_isDashingValue == 1 && _canDash) 
+        {
+            _characterController.Move(transform.forward * DashDistance);
+            _canDash = false;
+        }
+
+        if (!_canDash)
+        {
+            DashCooldown -= Time.deltaTime;
+            if (DashCooldown < 0)
+            {
+                DashCooldown = 2;
+                _canDash = true;
+                return;
+            }
+        }
+    }
+
     private IEnumerator ThrowPlayer()
     {
         Imp.GetComponent<ImpMovement>().IsBeingHeld = false;
