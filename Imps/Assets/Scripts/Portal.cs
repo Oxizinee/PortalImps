@@ -13,6 +13,7 @@ public class Portal : MonoBehaviour
     private Text _textMeshPro;
     private Text _textMeshPro2;
     [SerializeField] private float _timer = 150;
+    private GameObject[] _imps;
     private void Start()
     {
         _textMeshPro = UiText.GetComponent<Text>();
@@ -34,12 +35,30 @@ public class Portal : MonoBehaviour
         transform.Rotate(30 * Time.deltaTime,0, 0);
         _textMeshPro.text = $"{_timer.ToString("F2")}";
         _textMeshPro2.text = $"{ImpAmount.ToString()}/{MinImps.ToString()}";
+        _imps = GameObject.FindGameObjectsWithTag("Imp");
 
         if (_timer <= 0)
         {
             _timer = 0;
-            if(ImpAmount < MinImps)
-           SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            WinLoseBehaviour();
+        }
+
+        if (_timer < 120)
+        {
+            if (_imps.Length == 0)
+            {
+                WinLoseBehaviour();
+            }
+        }
+    }
+
+    private void WinLoseBehaviour()
+    {
+        if (ImpAmount < MinImps)
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        else if(ImpAmount >= MinImps)
+        {
+            Debug.Log("win");
         }
     }
 }
