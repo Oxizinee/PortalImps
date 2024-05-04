@@ -1,0 +1,19 @@
+Button {
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    font-size: 27px;
+    -unity-text-align: middle-center;
+    background-color: rgb(230, 161, 169);
+    border-left-color: rgb(238, 148, 171);
+    border-right-color: rgb(238, 148, 171);
+    border-top-color: rgb(238, 148, 171);
+    border-bottom-color: rgb(238, 148, 171);
+    border-top-width: 6px;
+    border-right-width: 6px;
+    border-bottom-width: 6px;
+    border-left-width: 6px;
+    border-top-left-radius: 21px;
+    border-top-right-radius: 21px;
+    border-bottom-right-radius: 21px;
+    border-bottom-left-radius: 21px;
+}
