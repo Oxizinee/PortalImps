@@ -445,7 +445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: f570c4264db397843a1c52366eaa2434, type: 3}
+  m_Actions: {fileID: -944628639613478452, guid: cb41f61df73367c429e1af99662b89ed, type: 3}
   m_NotificationBehavior: 3
   m_UIInputModule: {fileID: 17449770}
   m_DeviceLostEvent:
@@ -459,7 +459,7 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
+  m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 625726780}

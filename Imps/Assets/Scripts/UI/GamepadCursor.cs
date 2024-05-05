@@ -3,14 +3,6 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Users;
 
-/// <summary>
-/// Custom gamepad cursor for the Input System. Pipes gamepad/controller input into a Virtual Mouse,
-/// which is used to inform the Event System of what the user is hovering over and clicking on.
-/// 
-/// 1) Make sure the cursor Rect Transform pivot is at the center 0.5, 0.5.
-/// 2) Make sure the Cursor is the last element on the canvas so it will draw over the other items.
-/// 3) In the cursor, disable the Raycast Target on the Image so it cannot be accidentally selected.
-/// </summary>
 public class GamepadCursor : MonoBehaviour
 {
     [SerializeField, Tooltip("")]
@@ -26,22 +18,10 @@ public class GamepadCursor : MonoBehaviour
 
     private bool previousMouseState;
     private Mouse virtualMouse;
-    private Mouse currentMouse;
     private Camera mainCamera;
 
-    private string previousControlScheme = "";
-    private const string gamepadScheme = "Gamepad";
-    private const string mouseScheme = "Keyboard&Mouse";
-
-    /// <summary>
-    /// Called when the script is enabled.
-    /// Get reference to camera and current system mouse.
-    /// Create a virtual mouse and add it to the Input System, and pair the new device with the PlayerInput component.
-    /// Subscribe to the update events.
-    /// </summary>
     private void OnEnable() {
         mainCamera = Camera.main;
-        currentMouse = Mouse.current;
 
         if (virtualMouse == null)
             virtualMouse = (Mouse) InputSystem.AddDevice("VirtualMouse");
@@ -58,7 +38,6 @@ public class GamepadCursor : MonoBehaviour
         }    
 
         InputSystem.onAfterUpdate += UpdateMotion;
-        playerInput.onControlsChanged += OnControlsChanged;
     }
 
     /// <summary>
@@ -69,7 +48,6 @@ public class GamepadCursor : MonoBehaviour
     private void OnDisable() {
         if (virtualMouse != null && virtualMouse.added) InputSystem.RemoveDevice(virtualMouse);
         InputSystem.onAfterUpdate -= UpdateMotion;
-        playerInput.onControlsChanged -= OnControlsChanged;
     }
 
     /// <summary>
@@ -117,25 +95,4 @@ public class GamepadCursor : MonoBehaviour
         cursorTransform.anchoredPosition = anchoredPosition;
     }
 
-    /// <summary>
-    /// Called when the player switches the active control in the Input System. Is called from the PlayerInput component.
-    /// When the player switches from gamepad -> mouse, the gamepad cursor is disabled and the mouse is enabled. The mouse is moved to the position where the gamepad cursor was.
-    /// When the player switches from mouse -> gamepad, the mouse is disabled, the gamepad cursor is enabled, and the gamepad cursor is moved to where the system mouse previously was.
-    /// </summary>
-    /// <param name="input">Current PlayerInput component.</param>
-    private void OnControlsChanged(PlayerInput input) {
-        if (playerInput.currentControlScheme == mouseScheme && previousControlScheme != mouseScheme) {
-            cursorTransform.gameObject.SetActive(false);
-            Cursor.visible = true;
-            currentMouse.WarpCursorPosition(virtualMouse.position.ReadValue());
-            previousControlScheme = mouseScheme;
-        }
-        else if (playerInput.currentControlScheme == gamepadScheme && previousControlScheme != gamepadScheme) {
-            cursorTransform.gameObject.SetActive(true);
-            Cursor.visible = false;
-            InputState.Change(virtualMouse.position, currentMouse.position.ReadValue());
-            AnchorCursor(currentMouse.position.ReadValue());
-            previousControlScheme = gamepadScheme;
-        }
-    }
 }

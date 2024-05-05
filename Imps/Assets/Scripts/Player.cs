@@ -5,17 +5,25 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 using UnityEngine.TextCore.Text;
 
 public class Player : MonoBehaviour
 {
+    [Header("Movement")]
     public float StunDuration = 30;
     public float MovementSpeed = 7;
     public float RotationSpeed = 10;
     public float JumpHeight = 8;
+
+    [Header("Wall Shooting")]
     public float Cooldown = 3;
     public GameObject BulletPrefab;
     public Transform BulletSpawnPoint;
+
+    [Header("Player Input")]
+    public PlayerInput PlayerInput;
+    private Gamepad _gamepad;
 
     [Header("Pushing Back")]
     public LayerMask ImpMask;
@@ -52,6 +60,19 @@ public class Player : MonoBehaviour
         _characterController = GetComponent<CharacterController>();
         ThrowUI.SetActive(false);
         _canShoot = true;
+
+
+        _gamepad = Gamepad.current;
+        if (_gamepad != null)
+        {
+            Debug.Log(_gamepad.name);
+            Debug.Log(_gamepad.shortDisplayName);
+            Debug.Log(_gamepad.displayName);
+        }
+
+
+        InputUser.PerformPairingWithDevice(_gamepad, PlayerInput.user);
+
     }
     private void OnRotate(InputValue value)
     {
