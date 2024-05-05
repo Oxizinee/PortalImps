@@ -9,15 +9,19 @@ public class Portal : MonoBehaviour
     public int ImpAmount = 0;
     public int MinImps = 10;
     public GameObject UiText;
+    public AudioSource EnterPortalAudio;
     public GameObject ImpText;
     private Text _textMeshPro;
     private Text _textMeshPro2;
     [SerializeField] private float _timer = 150;
     private GameObject[] _imps;
+    private PlayerProgress _playerProgress;
+
     private void Start()
     {
         _textMeshPro = UiText.GetComponent<Text>();
         _textMeshPro2 = ImpText.GetComponent<Text>();
+        _playerProgress = GameObject.FindFirstObjectByType<PlayerProgress>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -25,6 +29,7 @@ public class Portal : MonoBehaviour
         if (other.gameObject.tag == "Imp" && !other.gameObject.GetComponent<ImpMovement>().IsBeingHeld)
         {
             ImpAmount++;
+            EnterPortalAudio.Play();
             Destroy(other.gameObject);
         }
     }
@@ -58,7 +63,9 @@ public class Portal : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         else if(ImpAmount >= MinImps)
         {
+            _playerProgress.Level1Completed = true;
             Debug.Log("win");
+            SceneManager.LoadScene("LevelSelectionScreen");
         }
     }
 }
