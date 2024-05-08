@@ -167,8 +167,6 @@ public class Player : MonoBehaviour
 
         StunningCooldown();
 
-        PushImpsOppositeDirection();
-
     }
 
     private void Dash()
@@ -204,26 +202,7 @@ public class Player : MonoBehaviour
         Imp = null;
         yield return null;
     }
-    private void PushImpsOppositeDirection()
-    {
-        RaycastHit hit;
-        if (Physics.SphereCast(new Vector3(transform.position.x, transform.position.y, transform.position.z), 4,
-            Vector3.forward, out hit, 2, ImpMask.value, QueryTriggerInteraction.UseGlobal))
-        {
-            Vector3 dir = hit.point - transform.position;
-            dir = -dir.normalized;
-
-            // And finally we add force in the direction of dir and multiply it by force. 
-            if (!hit.transform.gameObject.GetComponent<ImpMovement>()._isStunned)
-            {
-                hit.transform.position -= dir * pushBackForce * Time.deltaTime;
-                if (hit.rigidbody.GetComponent<ImpMovement>().RollDice() == 1)
-                {
-                    hit.rigidbody.GetComponent<ImpMovement>().ImpScreamAudio.Play();
-                }
-            }
-        }
-    }
+    
 
     private void StunningCooldown()
     {
