@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -34,6 +35,7 @@ public class Player : MonoBehaviour
     public bool CanStun; 
     private bool _isOnStunCooldown;
     public float StunCooldown = 20;
+    public CinemachineImpulseSource ImpulseSource;
 
     [Header("Throwing Imps")]
     public bool IsHoldingButton, IsHoldingImp;
@@ -114,10 +116,11 @@ public class Player : MonoBehaviour
             _canShoot = false;
             ThrowUI.SetActive(true);
             Imp.GetComponent<ImpMovement>().Renderer.sharedMaterial = Imp.GetComponent<ImpMovement>()._ghostMat;
+            Imp.GetComponent<ImpMovement>().ImpScreamAudio.Play();
             Imp.transform.position = transform.position + (transform.forward * ThrowStrength);
             if (_isShootingValue == 1)
             {
-                StartCoroutine(ThrowPlayer());
+                StartCoroutine(ThrowImp());
                 ThrowUI.SetActive(false);
                 _shotFired = true;
             }
@@ -170,7 +173,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private IEnumerator ThrowPlayer()
+    private IEnumerator ThrowImp()
     {
         Imp.GetComponent<ImpMovement>().IsBeingHeld = false;
         IsHoldingImp = false;
@@ -186,20 +189,27 @@ public class Player : MonoBehaviour
             Vector3.forward, out hit, 2, ImpMask.value, QueryTriggerInteraction.UseGlobal))
         {
             Vector3 dir = hit.point - transform.position;
-            // We then get the opposite (-Vector3) and normalize it
             dir = -dir.normalized;
+
             // And finally we add force in the direction of dir and multiply it by force. 
-            // This will push back the player
-            if(!hit.transform.gameObject.GetComponent<ImpMovement>()._isStunned)
-            hit.transform.position -= dir * pushBackForce * Time.deltaTime;
+            if (!hit.transform.gameObject.GetComponent<ImpMovement>()._isStunned)
+            {
+                hit.transform.position -= dir * pushBackForce * Time.deltaTime;
+                if (hit.rigidbody.GetComponent<ImpMovement>().RollDice() == 1)
+                {
+                    hit.rigidbody.GetComponent<ImpMovement>().ImpScreamAudio.Play();
+                }
+            }
         }
     }
+
     private void StunningCooldown()
     {
         if (_isStunningValue == 1 && StunCooldown >= 20)
         {
             CanStun = true;
             _isOnStunCooldown = true;
+           ImpulseSource.GenerateImpulse();
         }
         else if (_isStunningValue < 1)
         {

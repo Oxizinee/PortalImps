@@ -15,6 +15,9 @@ public class ImpMovement : MonoBehaviour
     private float _distance;
     private int _closestEscape;
     private NavMeshAgent _agent;
+
+    public AudioSource[] ImpSounds;
+    public AudioSource ImpScreamAudio;
     void Start()
     {
         Renderer = GetComponent<MeshRenderer>();
@@ -101,5 +104,10 @@ public class ImpMovement : MonoBehaviour
             _isGrounded = false;
             return false;
         }
+    }
+
+    public int RollDice()
+    {
+        return Random.Range(0, 2);
     }
 }

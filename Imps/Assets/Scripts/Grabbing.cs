@@ -15,8 +15,9 @@ public class Grabbing : MonoBehaviour
             other.GetComponent<ImpMovement>().IsBeingHeld = true;  
             Player.GetComponent<Player>().IsHoldingImp = true;
             Player.GetComponent<Player>().Imp = other.gameObject;
-            Destroy(other.gameObject.GetComponent<NavMeshAgent>()); 
-           // other.gameObject.transform.position = ShootingPlace.transform.position;
+            Destroy(other.gameObject.GetComponent<NavMeshAgent>());
+            // other.gameObject.transform.position = ShootingPlace.transform.position;
+            other.GetComponent<ImpMovement>().ImpScreamAudio.Play();
             other.transform.parent = Player.transform;
         }
     }
