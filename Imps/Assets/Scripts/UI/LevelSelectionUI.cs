@@ -13,9 +13,11 @@ public class LevelSelectionUI : MonoBehaviour
     private Button _level1Button;
     private Button _level2Button;
     private Button _level3Button;
+    private AudioSource _clickButtonSound;
 
     void Awake()
     {
+        _clickButtonSound = GetComponent<AudioSource>();
         _document = GetComponent<UIDocument>();
         _level1Button = _document.rootVisualElement.Q<Button>("Level1Button");
         _level2Button = _document.rootVisualElement.Q<Button>("Level2Button");
@@ -34,6 +36,7 @@ public class LevelSelectionUI : MonoBehaviour
     {
         if (_playerProgress.Level2Completed)
         {
+            _clickButtonSound.Play();
             SceneManager.LoadScene("Level_3");
         }
     }
@@ -42,12 +45,14 @@ public class LevelSelectionUI : MonoBehaviour
     {
         if (_playerProgress.Level1Completed)
         {
+            _clickButtonSound.Play();
             SceneManager.LoadScene("Level_2");
         }
     }
 
     private void Level1Button_clicked()
     {
+        _clickButtonSound.Play();
         SceneManager.LoadScene("Level_1");
     }
 
