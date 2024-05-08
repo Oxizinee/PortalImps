@@ -8,6 +8,7 @@ using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
 using UnityEngine.TextCore.Text;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -36,6 +37,8 @@ public class Player : MonoBehaviour
     private bool _isOnStunCooldown;
     public float StunCooldown = 20;
     public CinemachineImpulseSource ImpulseSource;
+    public AudioSource StunSound;
+    public AudioSource StunRechargeSound;
 
     [Header("Throwing Imps")]
     public bool IsHoldingButton, IsHoldingImp;
@@ -210,6 +213,7 @@ public class Player : MonoBehaviour
             CanStun = true;
             _isOnStunCooldown = true;
            ImpulseSource.GenerateImpulse();
+            StunSound.Play();
         }
         else if (_isStunningValue < 1)
         {
@@ -222,7 +226,10 @@ public class Player : MonoBehaviour
             if (StunCooldown < 0)
             {
                 StunCooldown = 20;
-                _isOnStunCooldown= false;
+                StunRechargeSound.Play();
+                StartCoroutine(FlashUI(StunUI));
+                _isOnStunCooldown = false;
+
                 return;
             }
         }
@@ -230,6 +237,19 @@ public class Player : MonoBehaviour
         StunUI.SetActive(!_isOnStunCooldown);
     }
 
+    public IEnumerator FlashUI(GameObject UIElement)
+    {
+       Vector3 startScale = UIElement.transform.localScale;
+       for(int i = 0;i<=2;i++) 
+        {
+            UIElement.transform.localScale = startScale * 2;
+            yield return new WaitForSeconds(0.15f);
+            UIElement.transform.localScale = startScale;
+            yield return new WaitForSeconds(0.3f);
+        }
+
+        yield return null;
+    }
     private void Rotate()
     {
         transform.Rotate(0, _rotateInput.x * RotationSpeed * Time.deltaTime, 0);

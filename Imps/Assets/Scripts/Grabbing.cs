@@ -19,6 +19,7 @@ public class Grabbing : MonoBehaviour
             // other.gameObject.transform.position = ShootingPlace.transform.position;
             other.GetComponent<ImpMovement>().ImpScreamAudio.Play();
             other.transform.parent = Player.transform;
+            StartCoroutine(Player.GetComponent<Player>().FlashUI(Player.GetComponent<Player>().ThrowUI));
         }
     }
 }

@@ -12,6 +12,7 @@ public class Stun : MonoBehaviour
         if (Player.GetComponent<Player>().CanStun && other.gameObject.tag == "Imp")
         {
             other.gameObject.GetComponent<ImpMovement>().Stun(Player.GetComponent<Player>().StunDuration);
+            other.GetComponent<ImpMovement>().ImpSounds[0].Play();   
         }
     }
 }
