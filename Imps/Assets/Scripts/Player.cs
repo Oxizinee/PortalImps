@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
+using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
@@ -106,6 +107,11 @@ public class Player : MonoBehaviour
     private void OnDash(InputValue value)
     {
         _isDashingValue = value.Get<float>();
+    }
+
+    private void OnRestart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     // Update is called once per frame
     void Update()
@@ -239,12 +245,11 @@ public class Player : MonoBehaviour
 
     public IEnumerator FlashUI(GameObject UIElement)
     {
-       Vector3 startScale = UIElement.transform.localScale;
        for(int i = 0;i<=2;i++) 
         {
-            UIElement.transform.localScale = startScale * 2;
+            UIElement.transform.localScale = Vector3.one * 2;
             yield return new WaitForSeconds(0.15f);
-            UIElement.transform.localScale = startScale;
+            UIElement.transform.localScale = Vector3.one;
             yield return new WaitForSeconds(0.3f);
         }
 

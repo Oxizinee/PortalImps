@@ -10,7 +10,9 @@ public class ImpMovement : MonoBehaviour
     private GameObject[] _escapes;
     public Material _ghostMat, _deafultMat;
     public MeshRenderer Renderer;
-    public bool _isGrounded, _isStunned, IsBeingHeld; 
+    public bool _isGrounded, _isStunned, IsBeingHeld;
+    public GameObject WalkingParticles;
+    public GameObject StunParticles;
 
     private float _distance;
     private int _closestEscape;
@@ -25,6 +27,7 @@ public class ImpMovement : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _escapes = GameObject.FindGameObjectsWithTag("Escape");
         _distance = Vector3.Distance(transform.position, _escapes[0].transform.position);
+        StunParticles.SetActive(false);
     }
 
     // Update is called once per frame
@@ -35,10 +38,14 @@ public class ImpMovement : MonoBehaviour
             if (_isStunned && !IsBeingHeld)
             {
                 _agent.isStopped = true;
+                WalkingParticles.SetActive(false);
+                StunParticles.SetActive(true);
             }
             else if (!_isStunned && !IsBeingHeld)
             {
                 _agent.isStopped = false;
+                WalkingParticles.SetActive(true);
+                StunParticles.SetActive(false);
                 FindClosestEscape();
             }
         }
