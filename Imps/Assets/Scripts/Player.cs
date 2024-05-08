@@ -18,11 +18,14 @@ public class Player : MonoBehaviour
     public float MovementSpeed = 7;
     public float RotationSpeed = 10;
     public float JumpHeight = 8;
+    public bool IsMoving;
 
     [Header("Wall Shooting")]
     public float Cooldown = 3;
     public GameObject BulletPrefab;
     public Transform BulletSpawnPoint;
+    public GameObject WallIndicator;
+    public AudioSource ThrowWallAudio;
 
     [Header("Player Input")]
     public PlayerInput PlayerInput;
@@ -45,18 +48,21 @@ public class Player : MonoBehaviour
     public bool IsHoldingButton, IsHoldingImp;
     public GameObject Imp = null;
     public float ThrowStrength = 20;
-    [SerializeField]private bool _canShoot = true;
+    private bool _canShoot = true;
     public GameObject ThrowUI;
 
     [Header("Dash")]
     public float DashDistance = 10;
     public float DashCooldown = 2;
-    [SerializeField]private float _isDashingValue;
-    [SerializeField] private bool _canDash = true;
+    public AudioSource DashAudio;
+    private float _isDashingValue;
+    private bool _canDash = true;
+    public GameObject DashLines;
+    public Material CrosshairSprite;
 
     private bool _shotFired;
     private float _isStunningValue;
-    [SerializeField]private float _isJumpingValue, _isShootingValue;
+    private float _isJumpingValue, _isShootingValue;
     private Vector3 _moveVector;
     private float _verticalVel, _gravity = 12;
     private CharacterController _characterController;
@@ -86,7 +92,7 @@ public class Player : MonoBehaviour
     }
     private void OnMove(InputValue value)
     {
-        _input = value.Get<Vector2>();  
+        _input = value.Get<Vector2>();
     }
     private void OnShoot(InputValue value) 
     { 
@@ -131,15 +137,17 @@ public class Player : MonoBehaviour
             {
                 StartCoroutine(ThrowImp());
                 ThrowUI.SetActive(false);
+                WallIndicator.SetActive(false);
                 _shotFired = true;
             }
         }
         else if (_isShootingValue == 1 && Cooldown >= 3 && _canShoot)
         {
-
+            ThrowWallAudio.Play();
             _shotFired = true;
             Vector3 direction = BulletSpawnPoint.position - Camera.main.transform.forward;
             GameObject go = Instantiate(BulletPrefab, direction, transform.rotation);
+            WallIndicator.SetActive(false);
         }
 
 
@@ -151,6 +159,7 @@ public class Player : MonoBehaviour
             {
                 Cooldown = 3;
                 _canShoot = true;
+                WallIndicator.SetActive(true);
                 _shotFired = false;
                 return;
             }
@@ -167,6 +176,9 @@ public class Player : MonoBehaviour
         if(_isDashingValue == 1 && _canDash) 
         {
             _characterController.Move(transform.forward * DashDistance);
+            DashAudio.Play();
+            CrosshairSprite.color = Color.red;
+            DashLines.SetActive(true);
             _canDash = false;
         }
 
@@ -175,7 +187,8 @@ public class Player : MonoBehaviour
             DashCooldown -= Time.deltaTime;
             if (DashCooldown < 0)
             {
-                DashCooldown = 2;
+                CrosshairSprite.color = Color.black;
+               DashCooldown = 2;
                 _canDash = true;
                 return;
             }
@@ -262,6 +275,7 @@ public class Player : MonoBehaviour
 
     private void Movement()
     {
+        IsMoving = _input != Vector2.zero;
         _moveVector = (transform.forward * _input.y + transform.right * _input.x) * MovementSpeed;    
         _moveVector.y = _verticalVel;
 
