@@ -5,18 +5,22 @@ using UnityEngine.UI;
 
 public class UIColorChange : MonoBehaviour
 {
-    private Vector3 _originalSize;
+
     private Text _text;
     private float _timer = 0;
 
     private void Start()
     {
-        _originalSize = transform.localScale;
         _text = GetComponent<Text>();
     }
 
     // Update is called once per frame
     void Update()
+    {
+       // ChangeUIColor();
+    }
+
+    public void ChangeUIColor()
     {
         _timer += Time.deltaTime;
 

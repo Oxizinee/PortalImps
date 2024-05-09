@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -14,7 +16,6 @@ public class Portal : MonoBehaviour
     public Image ProgressBar;
 
     public float SecondsBeforeNewScreen = 10;
-    
    private ImpSpawner[] _impSpawners;
 
     private float _allImpsInALevel = 0, _levelTime;
@@ -36,6 +37,8 @@ public class Portal : MonoBehaviour
         {
             _allImpsInALevel += spawner.amountOfImps;
         }
+
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -51,7 +54,7 @@ public class Portal : MonoBehaviour
     private void Update()
     {
         _timer -= Time.deltaTime;
-        transform.Rotate(30 * Time.deltaTime,0, 0);
+        transform.Rotate(30 * Time.deltaTime, 0, 0);
         _textMeshPro.text = $"{_timer.ToString("F2")}";
         _impsPresent = GameObject.FindGameObjectsWithTag("Imp");
 
@@ -61,7 +64,7 @@ public class Portal : MonoBehaviour
             WinLoseBehaviour();
         }
 
-        if (_timer < _levelTime * (80/100))
+        if (_timer < Percent(80) * _levelTime)
         {
             if (_impsPresent.Length == 0)
             {
@@ -71,8 +74,22 @@ public class Portal : MonoBehaviour
         }
 
         ProgressBarBehaviour();
+        ActivateTimerColorChange();
     }
 
+    private void ActivateTimerColorChange()
+    {
+        if (_timer <= Percent(40) * _levelTime)
+        {
+            UiText.GetComponent<UIColorChange>().ChangeUIColor();
+        }
+    }
+
+    private float Percent(float number)
+    {
+        float i = number / 100;
+        return i;
+    }
     private void WinLoseBehaviour()
     {
         if (ImpAmount < _allImpsInALevel * (MinPercantageToWin / 100)) //lose
