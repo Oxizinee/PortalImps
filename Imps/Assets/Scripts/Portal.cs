@@ -6,22 +6,35 @@ using UnityEngine.UI;
 
 public class Portal : MonoBehaviour
 {
-    public int ImpAmount = 0;
-    public int MinImps = 10;
+    public float ImpAmount = 0;
+    public int MinPercantageToWin = 50;
     public GameObject UiText;
     public AudioSource EnterPortalAudio;
-    public GameObject ImpText;
+    public AudioSource WinLevelAudio;
+    public Image ProgressBar;
+
+    public float SecondsBeforeNewScreen = 10;
+    
+   private ImpSpawner[] _impSpawners;
+
+    private float _allImpsInALevel = 0;
+    private bool _winSoundPlayed = false;
+
     private Text _textMeshPro;
-    private Text _textMeshPro2;
     [SerializeField] private float _timer = 150;
-    private GameObject[] _imps;
+    private GameObject[] _impsPresent;
     private PlayerProgress _playerProgress;
 
     private void Start()
     {
+        _impSpawners = GameObject.FindObjectsOfType<ImpSpawner>();
         _textMeshPro = UiText.GetComponent<Text>();
-        _textMeshPro2 = ImpText.GetComponent<Text>();
         _playerProgress = GameObject.FindFirstObjectByType<PlayerProgress>();
+
+        foreach (ImpSpawner spawner in _impSpawners)
+        {
+            _allImpsInALevel += spawner.amountOfImps;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -39,8 +52,7 @@ public class Portal : MonoBehaviour
         _timer -= Time.deltaTime;
         transform.Rotate(30 * Time.deltaTime,0, 0);
         _textMeshPro.text = $"{_timer.ToString("F2")}";
-        _textMeshPro2.text = $"{ImpAmount.ToString()}/{MinImps.ToString()}";
-        _imps = GameObject.FindGameObjectsWithTag("Imp");
+        _impsPresent = GameObject.FindGameObjectsWithTag("Imp");
 
         if (_timer <= 0)
         {
@@ -50,22 +62,50 @@ public class Portal : MonoBehaviour
 
         if (_timer < 120)
         {
-            if (_imps.Length == 0)
+            if (_impsPresent.Length == 0)
             {
                 WinLoseBehaviour();
             }
         }
+
+        ProgressBarBehaviour();
     }
 
     private void WinLoseBehaviour()
     {
-        if (ImpAmount < MinImps)
+        if (ImpAmount < _allImpsInALevel * (MinPercantageToWin / 100)) //lose
+        {
+
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        else if(ImpAmount >= MinImps)
+        }
+        else if (ImpAmount >= _allImpsInALevel * (MinPercantageToWin/100)) //win
         {
             _playerProgress.Level1Completed = true;
-            Debug.Log("win");
+
+            if (!_winSoundPlayed)
+            {
+                WinLevelAudio.Play();
+                _winSoundPlayed = true;
+            }
+           
+            WaitBeforeNextScreen();
+            // SceneManager.LoadScene("LevelSelectionScreen");
+        }
+    }
+
+    private void WaitBeforeNextScreen()
+    {
+        SecondsBeforeNewScreen -= Time.deltaTime;
+
+        if (SecondsBeforeNewScreen < 0)
+        {
             SceneManager.LoadScene("LevelSelectionScreen");
         }
     }
+
+    private void ProgressBarBehaviour()
+    {
+        ProgressBar.fillAmount = ImpAmount / _allImpsInALevel;
+    }
+  
 }
