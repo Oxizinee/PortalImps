@@ -17,7 +17,7 @@ public class Portal : MonoBehaviour
     
    private ImpSpawner[] _impSpawners;
 
-    private float _allImpsInALevel = 0;
+    private float _allImpsInALevel = 0, _levelTime;
     private bool _winSoundPlayed = false;
 
     private Text _textMeshPro;
@@ -30,6 +30,7 @@ public class Portal : MonoBehaviour
         _impSpawners = GameObject.FindObjectsOfType<ImpSpawner>();
         _textMeshPro = UiText.GetComponent<Text>();
         _playerProgress = GameObject.FindFirstObjectByType<PlayerProgress>();
+        _levelTime = _timer;
 
         foreach (ImpSpawner spawner in _impSpawners)
         {
@@ -60,10 +61,11 @@ public class Portal : MonoBehaviour
             WinLoseBehaviour();
         }
 
-        if (_timer < 120)
+        if (_timer < _levelTime * (80/100))
         {
             if (_impsPresent.Length == 0)
             {
+                _timer = 0;
                 WinLoseBehaviour();
             }
         }
