@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
@@ -7,15 +8,12 @@ using UnityEngine.UIElements;
 public class ImpMovement : MonoBehaviour
 {
     // Start is called before the first frame update
-    private GameObject[] _escapes;
+    [SerializeField]private GameObject[] _escapes;
     public Material _ghostMat, _deafultMat;
     public MeshRenderer Renderer;
     public bool _isGrounded, _isStunned, IsBeingHeld;
     public GameObject WalkingParticles;
     public GameObject StunParticles;
-
-    private float _distance;
-    private int _closestEscape;
     private NavMeshAgent _agent;
 
     public AudioSource[] ImpSounds;
@@ -26,7 +24,6 @@ public class ImpMovement : MonoBehaviour
         _deafultMat = Renderer.sharedMaterial;
         _agent = GetComponent<NavMeshAgent>();
         _escapes = GameObject.FindGameObjectsWithTag("Escape");
-        _distance = Vector3.Distance(transform.position, _escapes[0].transform.position);
         StunParticles.SetActive(false);
     }
 
@@ -66,18 +63,87 @@ public class ImpMovement : MonoBehaviour
         if (_isStunned) return;
         if (IsBeingHeld) return;
 
-        for (int i = 0; i < _escapes.Length; i++)
+        Transform closestExit = null;
+        float shortestDistance = Mathf.Infinity;
+
+        foreach (GameObject obj in _escapes)
         {
-            if (Vector3.Distance(transform.position, _escapes[i].transform.position) < _distance)
+            if (obj == null)
             {
-                _distance = Vector3.Distance(transform.position, _escapes[i].transform.position);
-                _closestEscape = i;
+                continue;
+            }
+
+            float distance = Vector3.Distance(obj.transform.position, transform.position);
+
+            // Update the closest object if the current object is closer
+            if (distance < shortestDistance)
+            {
+                closestExit = obj.transform;
+                shortestDistance = distance;
             }
         }
 
-        _agent.SetDestination(_escapes[_closestEscape].transform.position); 
+        if(closestExit != null) 
+        {
+            _agent.SetDestination(closestExit.position);
+        }
+        //ChooseTarget();
     }
+    public void ChooseTarget()
+    {
+        float closestTargetDistance = float.MaxValue;
+        NavMeshPath Path = null;
+        NavMeshPath ShortestPath = null;
 
+        for (int i = 0; i < _escapes.Length; i++)
+        {
+            if (_escapes[i] == null)
+            {
+                continue;
+            }
+            Path = new NavMeshPath();
+
+            NavMesh.SamplePosition(transform.position, out NavMeshHit hitA, 10f, NavMesh.AllAreas);
+            NavMesh.SamplePosition(_escapes[i].transform.position, out NavMeshHit hitB, 10f, NavMesh.AllAreas);
+
+            if (NavMesh.CalculatePath(hitA.position, hitB.position, _agent.areaMask, Path))
+            {
+                //different behaviour for path avaiability 
+                //switch (Path.status)
+                //{
+                //    case NavMeshPathStatus.PathComplete:
+                //       // Debug.Log($"{agent.name} will be able to reach {target.name}.");
+                //        break;
+                //    case NavMeshPathStatus.PathPartial:
+
+                //        Debug.Log($"will only be able to move partway");
+                //        break;
+                //    default:
+                //        _agent.Move(GameObject.FindFirstObjectByType<Player>().transform.position * Time.deltaTime);
+                //        Debug.Log($"will not be able to move partway"); 
+                //        break;
+                //}
+
+                float distance = Vector3.Distance(transform.position, Path.corners[0]);
+
+                for (int j = 1; j < Path.corners.Length; j++)
+                {
+                    distance += Vector3.Distance(Path.corners[j - 1], Path.corners[j]);
+                }
+
+                if (distance < closestTargetDistance)
+                {
+                    closestTargetDistance = distance;
+                    ShortestPath = Path;
+                }
+            }
+        }
+
+        if (ShortestPath != null)
+        {
+            _agent.SetPath(ShortestPath);
+        }
+    }
 
     public void Stun(float stunDuration)
     {

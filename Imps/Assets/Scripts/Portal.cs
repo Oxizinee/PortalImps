@@ -51,6 +51,16 @@ public class Portal : MonoBehaviour
         }
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Imp" && !other.gameObject.GetComponent<ImpMovement>().IsBeingHeld)
+        {
+            ImpAmount++;
+            EnterPortalAudio.Play();
+            Destroy(other.gameObject);
+        }
+    }
+
     private void Update()
     {
         _timer -= Time.deltaTime;

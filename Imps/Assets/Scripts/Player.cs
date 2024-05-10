@@ -60,6 +60,15 @@ public class Player : MonoBehaviour
     public GameObject DashLines;
     public Material CrosshairSprite;
 
+    [Header("Knockback")]
+    public float KnockbackCooldown = 3;
+    public AudioSource KnockbackAudio;
+    public AudioSource KnockbackRechargedAudio;
+    public GameObject KnockbackUI;
+    public GameObject KnockbackPrefab;
+    private float _knockbackValue;
+    private bool _canKnockback = true;
+
     private bool _shotFired;
     private float _isStunningValue;
     private float _isJumpingValue, _isShootingValue;
@@ -115,6 +124,10 @@ public class Player : MonoBehaviour
         _isDashingValue = value.Get<float>();
     }
 
+    private void OnKnockback(InputValue value)
+    {
+       _knockbackValue = value.Get<float>();
+    }
     private void OnRestart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -125,6 +138,7 @@ public class Player : MonoBehaviour
         Movement();
         Rotate();
         Dash();
+        Knockback();
 
         if (IsHoldingImp)
         {
@@ -167,6 +181,32 @@ public class Player : MonoBehaviour
 
         StunningCooldown();
 
+    }
+
+    private void Knockback()
+    {
+        if (_knockbackValue == 1 && _canKnockback)
+        {
+            GameObject go = Instantiate(KnockbackPrefab, transform.position, transform.rotation);
+            KnockbackAudio.Play();
+            KnockbackUI.SetActive(false);
+            go.transform.parent = null;
+            _canKnockback = false;
+        }
+
+        if(!_canKnockback) 
+        {
+            KnockbackCooldown -= Time.deltaTime;
+            if (KnockbackCooldown < 0)
+            {
+                KnockbackCooldown = 15;
+                KnockbackUI.SetActive(true);
+                KnockbackRechargedAudio.Play();
+                StartCoroutine(FlashUI(KnockbackUI));   
+                _canKnockback = true;
+                return;
+            }
+        }
     }
 
     private void Dash()
