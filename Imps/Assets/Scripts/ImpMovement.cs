@@ -17,10 +17,13 @@ public class ImpMovement : MonoBehaviour
     private NavMeshAgent _agent;
     public bool IsInBounds = true;
 
+    [SerializeField]private bool doOnce = true;
+    private Transform _startingPos;
     public AudioSource[] ImpSounds;
     public AudioSource ImpScreamAudio;
     void Start()
     {
+        _startingPos = gameObject.transform;
         Renderer = GetComponent<MeshRenderer>();
         _deafultMat = Renderer.sharedMaterial;
         _agent = GetComponent<NavMeshAgent>();
@@ -57,6 +60,18 @@ public class ImpMovement : MonoBehaviour
         {
             transform.position -= Vector3.up * 2 * Time.deltaTime;
         }
+
+        OutOfBoundsBehaviour();
+
+        
+    }
+
+    private void OutOfBoundsBehaviour()
+    {
+        if (!IsBeingHeld && !IsInBounds)
+        {
+            _agent.Warp(_startingPos.position);
+        }
     }
 
     private void FindClosestEscape()
@@ -86,66 +101,42 @@ public class ImpMovement : MonoBehaviour
 
         if(closestExit != null) 
         {
-            _agent.SetDestination(closestExit.position);
-        }
-        //ChooseTarget();
-    }
-    public void ChooseTarget()
-    {
-        float closestTargetDistance = float.MaxValue;
-        NavMeshPath Path = null;
-        NavMeshPath ShortestPath = null;
+            NavMeshPath path;
 
-        for (int i = 0; i < _escapes.Length; i++)
-        {
-            if (_escapes[i] == null)
-            {
-                continue;
-            }
-            Path = new NavMeshPath();
+            path = new NavMeshPath();
 
             NavMesh.SamplePosition(transform.position, out NavMeshHit hitA, 10f, NavMesh.AllAreas);
-            NavMesh.SamplePosition(_escapes[i].transform.position, out NavMeshHit hitB, 10f, NavMesh.AllAreas);
+            NavMesh.SamplePosition(closestExit.position, out NavMeshHit hitB, 10f, NavMesh.AllAreas);
 
-            if (NavMesh.CalculatePath(hitA.position, hitB.position, _agent.areaMask, Path))
+            if (NavMesh.CalculatePath(hitA.position, hitB.position, _agent.areaMask, path))
             {
-                //different behaviour for path avaiability 
-                //switch (Path.status)
-                //{
-                //    case NavMeshPathStatus.PathComplete:
-                //       // Debug.Log($"{agent.name} will be able to reach {target.name}.");
-                //        break;
-                //    case NavMeshPathStatus.PathPartial:
-
-                //        Debug.Log($"will only be able to move partway");
-                //        break;
-                //    default:
-                //        _agent.Move(GameObject.FindFirstObjectByType<Player>().transform.position * Time.deltaTime);
-                //        Debug.Log($"will not be able to move partway"); 
-                //        break;
-                //}
-
-                float distance = Vector3.Distance(transform.position, Path.corners[0]);
-
-                for (int j = 1; j < Path.corners.Length; j++)
-                {
-                    distance += Vector3.Distance(Path.corners[j - 1], Path.corners[j]);
-                }
-
-                if (distance < closestTargetDistance)
-                {
-                    closestTargetDistance = distance;
-                    ShortestPath = Path;
-                }
+                //different behaviour for path avaiability
+                switch (path.status)
+                    {
+                        case NavMeshPathStatus.PathComplete:
+                        _agent.destination = closestExit.position;
+                        break;
+                        case NavMeshPathStatus.PathPartial:
+                        if (doOnce)
+                        {
+                            _agent.destination = GenerateRandomPos(closestExit.position);
+                            doOnce = false;
+                        }
+                        break;
+                    }
             }
+           
         }
 
-        if (ShortestPath != null)
-        {
-            _agent.SetPath(ShortestPath);
-        }
     }
 
+    private Vector3 GenerateRandomPos(Vector3 StartPos)
+    {
+        Vector3 randomPoint = StartPos + Random.insideUnitSphere * 10;
+        NavMesh.SamplePosition(randomPoint, out NavMeshHit hitC, 1, NavMesh.AllAreas);
+        return hitC.position;
+    }
+  
     public void Stun(float stunDuration)
     {
         if(IsBeingHeld) return; 
