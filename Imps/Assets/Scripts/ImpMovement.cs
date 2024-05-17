@@ -15,6 +15,7 @@ public class ImpMovement : MonoBehaviour
     public GameObject WalkingParticles;
     public GameObject StunParticles;
     private NavMeshAgent _agent;
+    public bool IsInBounds = true;
 
     public AudioSource[] ImpSounds;
     public AudioSource ImpScreamAudio;

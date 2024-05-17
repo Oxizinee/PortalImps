@@ -147,7 +147,7 @@ public class Player : MonoBehaviour
             Imp.GetComponent<ImpMovement>().Renderer.sharedMaterial = Imp.GetComponent<ImpMovement>()._ghostMat;
             Imp.GetComponent<ImpMovement>().ImpScreamAudio.Play();
             Imp.transform.position = transform.position + (transform.forward * ThrowStrength);
-            if (_isShootingValue == 1)
+            if (_isShootingValue == 1 && Imp.GetComponent<ImpMovement>().IsInBounds)
             {
                 StartCoroutine(ThrowImp());
                 ThrowUI.SetActive(false);
