@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/ButtonStyle.uss?fileID=7433441132597879392&amp;guid=fb4c777837e08f7469ef8a162a5108de&amp;type=3#ButtonStyle" />
+    <ui:VisualElement style="position: absolute; left: 5%; right: 5%; top: 5%; bottom: 5%; background-color: rgb(152, 191, 211); border-left-color: rgb(104, 170, 191); border-right-color: rgb(104, 170, 191); border-top-color: rgb(104, 170, 191); border-bottom-color: rgb(104, 170, 191); border-top-width: 6px; border-right-width: 6px; border-bottom-width: 6px; border-left-width: 6px; border-top-left-radius: 58px; border-top-right-radius: 58px; border-bottom-right-radius: 58px; border-bottom-left-radius: 58px; opacity: 0.51;">
+        <ui:Button text="Go To Level Selection" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LevelSelectionButton" style="top: 292px; width: 50%; white-space: nowrap; position: absolute; left: 26%;" />
+        <ui:Button text="Exit Game" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ExitGameButton" style="top: 393px; width: 50%; white-space: nowrap; position: absolute; left: 26%;" />
+        <ui:Button text="Replay Level" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ReplayLevel" style="top: 192px; width: 50%; white-space: nowrap; position: absolute; left: 26%;" />
+    </ui:VisualElement>
+</ui:UXML>

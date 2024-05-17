@@ -11,18 +11,20 @@ public class Portal : MonoBehaviour
     public float ImpAmount = 0;
     public int MinPercantageToWin = 50;
     public GameObject UiText;
+    public GameObject UiImpAmountText;
     public AudioSource EnterPortalAudio;
     public AudioSource WinLevelAudio;
     public AudioSource LoseLevelAudio;
     public Image ProgressBar;
-
-    public float SecondsBeforeNewScreen = 10;
+    public GameObject HP;
+    [SerializeField]private float _timerBeforeNewScreen = 0;
+    public int PlayerHealth;
    private ImpSpawner[] _impSpawners;
 
     private float _allImpsInALevel = 0, _levelTime, _minImpsToWin;
     private bool _endingSoundPlayed = false;
 
-    private Text _textMeshPro;
+    private Text _textMeshPro, _impAmountText, _hpText;
     [SerializeField] private float _timer = 150;
     private GameObject[] _impsPresent;
     private PlayerProgress _playerProgress;
@@ -33,6 +35,8 @@ public class Portal : MonoBehaviour
         _textMeshPro = UiText.GetComponent<Text>();
         _playerProgress = GameObject.FindFirstObjectByType<PlayerProgress>();
         _levelTime = _timer;
+        _impAmountText = UiImpAmountText.GetComponent<Text>();
+        _hpText = HP.GetComponent<Text>();
 
         foreach (ImpSpawner spawner in _impSpawners)
         {
@@ -40,6 +44,8 @@ public class Portal : MonoBehaviour
         }
 
         _minImpsToWin = (_allImpsInALevel * Percent(MinPercantageToWin));
+        PlayerHealth = (int)_minImpsToWin + 1;
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -66,8 +72,10 @@ public class Portal : MonoBehaviour
     {
         _timer -= Time.deltaTime;
         transform.Rotate(30 * Time.deltaTime, 0, 0);
-        _textMeshPro.text = $"{_timer.ToString("F2")}";
+        _textMeshPro.text = $"{Mathf.Clamp(_timer, 0, _timer).ToString("F2")}";
         _impsPresent = GameObject.FindGameObjectsWithTag("Imp");
+        _impAmountText.text = $"{ImpAmount}/{_minImpsToWin}";
+        _hpText.text = $"{Mathf.Clamp(PlayerHealth, 0, PlayerHealth)}";
 
         if (_timer <= 0)
         {
@@ -82,6 +90,11 @@ public class Portal : MonoBehaviour
                 _timer = 0;
                 WinLoseBehaviour();
             }
+        }
+
+        if(PlayerHealth == 0) 
+        {
+            WinLoseBehaviour();
         }
 
         ProgressBarBehaviour();
@@ -111,7 +124,7 @@ public class Portal : MonoBehaviour
                 _endingSoundPlayed = true;
             }
 
-            WaitBeforeNextScreen(SceneManager.GetActiveScene().buildIndex);
+            WaitBeforeNextScreen(SceneManager.GetActiveScene().buildIndex, LoseLevelAudio.clip.length);
         }
         else if (ImpAmount >= _minImpsToWin) //win
         {
@@ -123,15 +136,15 @@ public class Portal : MonoBehaviour
                 _endingSoundPlayed = true;
             }
            
-            WaitBeforeNextScreen(1);
+            WaitBeforeNextScreen(4, WinLevelAudio.clip.length);
         }
     }
 
-    private void WaitBeforeNextScreen(int sceneIndex)
+    private void WaitBeforeNextScreen(int sceneIndex, float audioClipLength)
     {
-        SecondsBeforeNewScreen -= Time.deltaTime;
+        _timerBeforeNewScreen += Time.deltaTime;
 
-        if (SecondsBeforeNewScreen < 0)
+        if (_timerBeforeNewScreen > audioClipLength)
         {
             SceneManager.LoadScene(sceneIndex);
         }
