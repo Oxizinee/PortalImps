@@ -13,13 +13,14 @@ public class Portal : MonoBehaviour
     public GameObject UiText;
     public AudioSource EnterPortalAudio;
     public AudioSource WinLevelAudio;
+    public AudioSource LoseLevelAudio;
     public Image ProgressBar;
 
     public float SecondsBeforeNewScreen = 10;
    private ImpSpawner[] _impSpawners;
 
-    private float _allImpsInALevel = 0, _levelTime;
-    private bool _winSoundPlayed = false;
+    private float _allImpsInALevel = 0, _levelTime, _minImpsToWin;
+    private bool _endingSoundPlayed = false;
 
     private Text _textMeshPro;
     [SerializeField] private float _timer = 150;
@@ -38,7 +39,7 @@ public class Portal : MonoBehaviour
             _allImpsInALevel += spawner.amountOfImps;
         }
 
-
+        _minImpsToWin = (_allImpsInALevel * Percent(MinPercantageToWin));
     }
 
     private void OnTriggerEnter(Collider other)
@@ -102,33 +103,37 @@ public class Portal : MonoBehaviour
     }
     private void WinLoseBehaviour()
     {
-        if (ImpAmount < _allImpsInALevel * (MinPercantageToWin / 100)) //lose
+        if (ImpAmount < _minImpsToWin) //lose
         {
+            if (!_endingSoundPlayed)
+            {
+                LoseLevelAudio.Play();
+                _endingSoundPlayed = true;
+            }
 
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            WaitBeforeNextScreen(SceneManager.GetActiveScene().buildIndex);
         }
-        else if (ImpAmount >= _allImpsInALevel * (MinPercantageToWin/100)) //win
+        else if (ImpAmount >= _minImpsToWin) //win
         {
             _playerProgress.Level1Completed = true;
 
-            if (!_winSoundPlayed)
+            if (!_endingSoundPlayed)
             {
                 WinLevelAudio.Play();
-                _winSoundPlayed = true;
+                _endingSoundPlayed = true;
             }
            
-            WaitBeforeNextScreen();
-            // SceneManager.LoadScene("LevelSelectionScreen");
+            WaitBeforeNextScreen(1);
         }
     }
 
-    private void WaitBeforeNextScreen()
+    private void WaitBeforeNextScreen(int sceneIndex)
     {
         SecondsBeforeNewScreen -= Time.deltaTime;
 
         if (SecondsBeforeNewScreen < 0)
         {
-            SceneManager.LoadScene("LevelSelectionScreen");
+            SceneManager.LoadScene(sceneIndex);
         }
     }
 
