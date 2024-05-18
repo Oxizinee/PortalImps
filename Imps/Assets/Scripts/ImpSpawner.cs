@@ -9,7 +9,6 @@ public class ImpSpawner : MonoBehaviour
     public int amountOfImps = 20;
     public int secondsBetweenImps = 1;
     public int Delay = 0;
-    public float Angle = 30;
     public Light Light;
     public float TimeDelay = 0.5f;
 
