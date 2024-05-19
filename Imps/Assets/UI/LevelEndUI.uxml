@@ -5,4 +5,5 @@
         <ui:Button text="Exit Game" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ExitGameButton" style="top: 393px; width: 50%; white-space: nowrap; position: absolute; left: 26%;" />
         <ui:Button text="Replay Level" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ReplayLevel" style="top: 192px; width: 50%; white-space: nowrap; position: absolute; left: 26%;" />
     </ui:VisualElement>
+    <ui:Label tabindex="-1" text="You won!" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-text-align: middle-center; -unity-font-style: bold; color: rgb(255, 255, 255); font-size: 47px; top: 125px;" />
 </ui:UXML>

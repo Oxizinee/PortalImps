@@ -10,6 +10,10 @@ public class Portal : MonoBehaviour
 {
     public AudioSource EnterPortalAudio;
     private LevelManager _levelManager;
+    public float Speed = 2f;
+    public float MaxHeight = 5f;
+    public float MinHeight = 0f;
+    private float _direction = 1; 
     private void Start()
     {
         _levelManager = GameObject.FindFirstObjectByType<LevelManager>();
@@ -36,6 +40,25 @@ public class Portal : MonoBehaviour
     }
 
 
-   
+
+    private void Update()
+    {
+        transform.Rotate(Vector3.right, 30 * Time.deltaTime);
+
+
+        transform.Translate(Vector3.right * Speed * _direction * Time.deltaTime);
+
+        // Check if the object has reached the maximum height or minimum height, change direction accordingly
+        if (transform.position.y >= MaxHeight)
+        {
+            _direction = -1; // Change direction to move down
+        }
+        else if (transform.position.y <= MinHeight)
+        {
+            _direction = 1; // Change direction to move up
+        }
+    }
+
+
 
 }

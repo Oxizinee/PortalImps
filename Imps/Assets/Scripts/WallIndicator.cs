@@ -9,10 +9,8 @@ public class WallIndicator : MonoBehaviour
     public float minHeight = 0f; 
     public Player player;
     private float direction = 1; // 1 for moving up, -1 for moving down
-    private Vector3 _startPos;
     private void Start()
     {
-        _startPos = transform.position;
     }
     void Update()
     {

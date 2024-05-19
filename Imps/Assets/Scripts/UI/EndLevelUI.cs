@@ -42,14 +42,6 @@ using UnityEngine.UIElements;
             {
                 SceneManager.LoadScene("Level_1");
             }
-            else if (_playerProgress.Level2Completed)
-            {
-                SceneManager.LoadScene("Level_2");
-            }
-            else if (_playerProgress.Level3Completed)
-            {
-                SceneManager.LoadScene("Level_3");
-            }
     }
     private void LevelSelectionButton_clicked()
     {

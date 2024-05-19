@@ -16,11 +16,15 @@ public class ImpMovement : MonoBehaviour
     public GameObject StunParticles;
     private NavMeshAgent _agent;
     public bool IsInBounds = true;
+    public float MaxSpeed = 4;
+    public float BaseSpeed = 3.5f;
 
     [SerializeField]private bool doOnce = true;
     private Transform _startingPos;
     public AudioSource[] ImpSounds;
     public AudioSource ImpScreamAudio;
+
+   [SerializeField] private const float _exitDistance = 80; 
     void Start()
     {
         _startingPos = gameObject.transform;
@@ -62,10 +66,24 @@ public class ImpMovement : MonoBehaviour
         }
 
         OutOfBoundsBehaviour();
-
+        AdjustSpeedOnDistance();
         
     }
 
+    private void AdjustSpeedOnDistance()
+    {
+        if (_isStunned) return;
+        if (IsBeingHeld) return;
+
+        if (_agent.remainingDistance > _exitDistance/2)
+        {
+            _agent.speed = MaxSpeed;
+        }
+        else
+        {
+            _agent.speed = BaseSpeed;
+        }
+    }
     private void OutOfBoundsBehaviour()
     {
         if (!IsBeingHeld && !IsInBounds)
@@ -119,7 +137,7 @@ public class ImpMovement : MonoBehaviour
                         case NavMeshPathStatus.PathPartial:
                         if (doOnce)
                         {
-                            _agent.destination = GenerateRandomPos(closestExit.position);
+                            _agent.destination = GenerateRandomPos(transform.position);
                             doOnce = false;
                         }
                         break;

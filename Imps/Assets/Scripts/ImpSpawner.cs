@@ -11,7 +11,7 @@ public class ImpSpawner : MonoBehaviour
     public int Delay = 0;
     public Light Light;
     public float TimeDelay = 0.5f;
-
+    public float BaseSpeed = 3.5f;
 
     private bool _impsSpawning;
     private float _timer;
@@ -27,7 +27,8 @@ public class ImpSpawner : MonoBehaviour
         yield return new WaitForSeconds(Delay);
         for (int i = 0; i < amountOfImps; i++)
         {
-            Instantiate(Imp, new Vector3(transform.position.x + Random.Range(-7,7), transform.position.y, transform.position.z + Random.Range(-7, 7)), Quaternion.identity);
+            GameObject go = Instantiate(Imp, new Vector3(transform.position.x + Random.Range(-7,7), transform.position.y, transform.position.z + Random.Range(-7, 7)), Quaternion.identity);
+            go.GetComponent<ImpMovement>().BaseSpeed = BaseSpeed;
             yield return new WaitForSeconds(secondsBetweenImps);
             if (i == amountOfImps - 1)
             {

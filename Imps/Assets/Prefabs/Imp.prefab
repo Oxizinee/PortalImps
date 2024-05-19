@@ -5077,6 +5077,8 @@ MonoBehaviour:
   WalkingParticles: {fileID: 8795695088588027673}
   StunParticles: {fileID: 2933983161215285253}
   IsInBounds: 1
+  MaxSpeed: 4
+  doOnce: 1
   ImpSounds:
   - {fileID: -8899838988425763672}
   - {fileID: -5993056302331264868}
