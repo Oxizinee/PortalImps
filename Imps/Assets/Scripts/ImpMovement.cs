@@ -20,14 +20,14 @@ public class ImpMovement : MonoBehaviour
     public float BaseSpeed = 3.5f;
 
     [SerializeField]private bool doOnce = true;
-    private Transform _startingPos;
+   [SerializeField] private Vector3 _startingPos;
     public AudioSource[] ImpSounds;
     public AudioSource ImpScreamAudio;
 
    [SerializeField] private const float _exitDistance = 80; 
     void Start()
     {
-        _startingPos = gameObject.transform;
+        _startingPos = gameObject.transform.position;
         Renderer = GetComponent<MeshRenderer>();
         _deafultMat = Renderer.sharedMaterial;
         _agent = GetComponent<NavMeshAgent>();
@@ -88,7 +88,7 @@ public class ImpMovement : MonoBehaviour
     {
         if (!IsBeingHeld && !IsInBounds)
         {
-            _agent.Warp(_startingPos.position);
+            _agent.Warp(_startingPos);
         }
     }
 

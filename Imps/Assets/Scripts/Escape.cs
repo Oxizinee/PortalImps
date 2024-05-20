@@ -14,6 +14,7 @@ public class Escape : MonoBehaviour
     public GameObject Heart;
     public Color color;
 
+    private float _UIScaleTimer = 0;
     private Image _hpUI; 
     private void OnTriggerStay(Collider other)
     {
@@ -24,6 +25,11 @@ public class Escape : MonoBehaviour
             ImpulseSource.GenerateImpulse();
             _levelManager.PlayerHealth--;
             Heart.GetComponent<ScalingUI>().ShouldScaleAllTime = true;
+            _UIScaleTimer += Time.deltaTime;
+            if(_UIScaleTimer > 2 ) 
+            {
+                Heart.GetComponent<ScalingUI>().ShouldScaleAllTime = false;
+            }
             Particles.Play();
         }
 

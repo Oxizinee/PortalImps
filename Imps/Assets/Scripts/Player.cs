@@ -51,6 +51,7 @@ public class Player : MonoBehaviour
     public float ThrowStrength = 20;
     private bool _canShoot = true;
     public GameObject ThrowUI;
+    public GameObject ImpOverShoulder;
 
     [Header("Dash")]
     public float DashDistance = 10;
@@ -95,7 +96,7 @@ public class Player : MonoBehaviour
 
         InputUser.PerformPairingWithDevice(_gamepad, PlayerInput.user);
         WallCooldownUI.GetComponent<Image>().fillAmount = 0;
-
+        ImpOverShoulder.SetActive(false);
     }
     private void OnRotate(InputValue value)
     {
@@ -144,6 +145,7 @@ public class Player : MonoBehaviour
 
         if (IsHoldingImp)
         {
+            ImpOverShoulder.SetActive(true);
             _canShoot = false;
             ThrowUI.SetActive(true);
             Imp.GetComponent<ImpMovement>().Renderer.sharedMaterial = Imp.GetComponent<ImpMovement>()._ghostMat;
@@ -154,6 +156,7 @@ public class Player : MonoBehaviour
                 StartCoroutine(ThrowImp());
                 ThrowUI.SetActive(false);
                 WallIndicator.SetActive(false);
+                ImpOverShoulder.SetActive(false);
                 _shotFired = true;
             }
         }
