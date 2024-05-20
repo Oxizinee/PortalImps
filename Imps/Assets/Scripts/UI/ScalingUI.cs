@@ -11,6 +11,8 @@ public class ScalingUI : MonoBehaviour
 
     public float Time = 0.3f;
     public float ScaleFactor = 1.2f;
+
+    public bool ShouldScaleAllTime = true;
     void Start()
     {
         _originalSize = transform.localScale;
@@ -20,16 +22,21 @@ public class ScalingUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.localScale = Vector3.SmoothDamp(transform.localScale, _targetScale, ref _velocity, Time);
+        if (ShouldScaleAllTime)
+        {
+            transform.localScale = Vector3.SmoothDamp(transform.localScale, _targetScale, ref _velocity, Time);
 
-        if (transform.localScale == _originalSize * ScaleFactor)
-        {
-            _targetScale = _originalSize;
-        }
-        else if (transform.localScale == _originalSize)
-        {
-            _targetScale = _originalSize * ScaleFactor;
+            if (transform.localScale == _originalSize * ScaleFactor)
+            {
+                _targetScale = _originalSize;
+            }
+            else if (transform.localScale == _originalSize)
+            {
+                _targetScale = _originalSize * ScaleFactor;
+            }
+        
         }
 
     }
+
 }

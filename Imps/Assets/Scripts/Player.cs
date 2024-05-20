@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
 
     [Header("Wall Shooting")]
     public float Cooldown = 3;
+    public GameObject WallCooldownUI;
     public GameObject BulletPrefab;
     public Transform BulletSpawnPoint;
     public GameObject WallIndicator;
@@ -93,6 +94,7 @@ public class Player : MonoBehaviour
 
 
         InputUser.PerformPairingWithDevice(_gamepad, PlayerInput.user);
+        WallCooldownUI.GetComponent<Image>().fillAmount = 0;
 
     }
     private void OnRotate(InputValue value)
@@ -169,12 +171,15 @@ public class Player : MonoBehaviour
         if (_shotFired)
         {
             Cooldown -= Time.deltaTime;
+            WallCooldownUI.GetComponent<Image>().fillAmount = Mathf.Clamp01((0.2f + Time.deltaTime * 1.2f)/ Cooldown);
             if (Cooldown < 0)
             {
+                WallCooldownUI.GetComponent<Image>().fillAmount = 1;
                 Cooldown = 3;
                 _canShoot = true;
                 WallIndicator.SetActive(true);
                 _shotFired = false;
+                WallCooldownUI.GetComponent<Image>().fillAmount = 0;
                 return;
             }
         }
