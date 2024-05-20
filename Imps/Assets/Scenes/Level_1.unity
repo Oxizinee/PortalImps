@@ -6078,7 +6078,7 @@ PrefabInstance:
       objectReference: {fileID: 407644307}
     - target: {fileID: 2402197560049830301, guid: 7d73b4568bde66748ba75ef3dadcae1b, type: 3}
       propertyPath: Cooldown
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2402197560049830301, guid: 7d73b4568bde66748ba75ef3dadcae1b, type: 3}
       propertyPath: KnockbackUI
@@ -6098,6 +6098,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5274309876714802288, guid: 7d73b4568bde66748ba75ef3dadcae1b, type: 3}
       propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6286063126582056675, guid: 7d73b4568bde66748ba75ef3dadcae1b, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7528469710516503644, guid: 7d73b4568bde66748ba75ef3dadcae1b, type: 3}

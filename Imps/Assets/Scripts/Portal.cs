@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class Portal : MonoBehaviour
 {
     public AudioSource EnterPortalAudio;
+    public ParticleSystem Particles;
     private LevelManager _levelManager;
     public float Speed = 2f;
     public float MaxHeight = 5f;
@@ -26,6 +27,7 @@ public class Portal : MonoBehaviour
             _levelManager.ImpAmount++;
             EnterPortalAudio.Play();
             Destroy(other.gameObject);
+            Particles.Play();
         }
     }
 
@@ -36,6 +38,7 @@ public class Portal : MonoBehaviour
             _levelManager.ImpAmount++;
             EnterPortalAudio.Play();
             Destroy(other.gameObject);
+            Particles.Play();
         }
     }
 

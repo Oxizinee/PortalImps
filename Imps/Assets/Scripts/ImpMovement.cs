@@ -137,7 +137,7 @@ public class ImpMovement : MonoBehaviour
                         case NavMeshPathStatus.PathPartial:
                         if (doOnce)
                         {
-                            _agent.destination = GenerateRandomPos(transform.position);
+                            _agent.destination = GenerateRandomPos(closestExit.position);
                             doOnce = false;
                         }
                         break;

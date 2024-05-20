@@ -9,6 +9,7 @@ public class Escape : MonoBehaviour
     // Start is called before the first frame update
     private AudioSource _escapeSound;
     private LevelManager _levelManager;
+    public ParticleSystem Particles;
     public CinemachineImpulseSource ImpulseSource;
     public GameObject Heart;
     public Color color;
@@ -23,6 +24,7 @@ public class Escape : MonoBehaviour
             ImpulseSource.GenerateImpulse();
             _levelManager.PlayerHealth--;
             Heart.GetComponent<ScalingUI>().ShouldScaleAllTime = true;
+            Particles.Play();
         }
 
     }
