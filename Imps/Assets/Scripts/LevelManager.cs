@@ -16,8 +16,9 @@ public class LevelManager : MonoBehaviour
     public AudioSource LoseLevelAudio;
     public Image ProgressBar;
     public GameObject HP;
-    private float _timerBeforeNewScreen = 0;
+    [SerializeField]private float _timerBeforeNewScreen = 0;
     public int PlayerHealth;
+    public AudioSource LevelMusic;
     [SerializeField]private ImpSpawner[] _impSpawners;
 
     private float _allImpsInALevel = 0, _levelTime, _minImpsToWin;
@@ -69,7 +70,7 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if (PlayerHealth == 0)
+        if (PlayerHealth <= 0)
         {
             WinLoseBehaviour();
         }
@@ -93,6 +94,8 @@ public class LevelManager : MonoBehaviour
     {
         if (ImpAmount < _minImpsToWin) //lose
         {
+            LevelMusic.Stop();
+
             if (!_endingSoundPlayed)
             {
                 LoseLevelAudio.Play();
@@ -104,6 +107,8 @@ public class LevelManager : MonoBehaviour
         else if (ImpAmount >= _minImpsToWin) //win
         {
             _playerProgress.Level1Completed = true;
+
+            LevelMusic.Stop();
 
             if (!_endingSoundPlayed)
             {
